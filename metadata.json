@@ -1,38 +1,52 @@
 {
-  "name": "puppetlabs-hocon",
-  "version": "1.1.0",
-  "author": "puppetlabs",
+  "name": "puppet-hocon",
+  "version": "1.2.0",
+  "author": "Vox Pupuli",
   "summary": "Resource types for managing settings in HOCON files",
   "license": "Apache-2.0",
-  "source": "https://github.com/puppetlabs/puppetlabs-hocon",
-  "project_page": "https://github.com/puppetlabs/puppetlabs-hocon",
-  "issues_url": "https://github.com/puppetlabs/puppetlabs-hocon/issues",
+  "source": "https://github.com/voxpupuli/puppet-hocon",
+  "project_page": "https://github.com/voxpupuli/puppet-hocon",
+  "issues_url": "https://github.com/voxpupuli/puppet-hocon/issues",
   "dependencies": [
 
   ],
   "operatingsystem_support": [
     {
-      "operatingsystem": "CentOS",
+      "operatingsystem": "RedHat",
       "operatingsystemrelease": [
         "6",
-        "7",
-        "8"
-      ]
-    },
-    {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [
         "7",
         "8",
         "9"
       ]
     },
     {
-      "operatingsystem": "RedHat",
+      "operatingsystem": "CentOS",
       "operatingsystemrelease": [
         "6",
         "7",
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "Rocky",
+      "operatingsystemrelease": [
         "8"
+      ]
+    },
+    {
+      "operatingsystem": "AlmaLinux",
+      "operatingsystemrelease": [
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "Fedora",
+      "operatingsystemrelease": [
+        "35",
+        "36"
       ]
     },
     {
@@ -44,18 +58,42 @@
       ]
     },
     {
+      "operatingsystem": "Scientific",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "SLES",
+      "operatingsystemrelease": [
+        "11 SP1",
+        "12"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "7",
+        "8",
+        "9"
+      ]
+    },
+    {
       "operatingsystem": "Ubuntu",
       "operatingsystemrelease": [
-        "14.04",
-        "16.04",
-        "18.04"
+        "18.04",
+        "18.10",
+        "19.04",
+        "19.10",
+        "20.04"
       ]
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 4.7.0 < 7.0.0"
+      "version_requirement": ">= 4.7.0 < 8.0.0"
     },
     {
       "name": "ruby",
