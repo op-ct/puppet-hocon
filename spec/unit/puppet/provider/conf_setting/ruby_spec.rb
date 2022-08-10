@@ -727,7 +727,7 @@ describe provider_class do
         Puppet::Type::Hocon_setting.new(common_params.merge(
                                           setting: 'foo', type: 'number', value: 'abcdefg'
                                         ))
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it "throws when type is 'boolean' but value is not" do
@@ -735,7 +735,7 @@ describe provider_class do
         Puppet::Type::Hocon_setting.new(common_params.merge(
                                           setting: 'foo', type: 'boolean', value: 'abcdefg'
                                         ))
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it "throws when type is 'hash' but value is not" do
@@ -743,7 +743,7 @@ describe provider_class do
         Puppet::Type::Hocon_setting.new(common_params.merge(
                                           setting: 'foo', type: 'hash', value: 'abcdefg'
                                         ))
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it "throws when type is 'string' but value is not" do
@@ -751,7 +751,7 @@ describe provider_class do
         Puppet::Type::Hocon_setting.new(common_params.merge(
                                           setting: 'foo', type: 'string', value: 12
                                         ))
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it "throws when type is 'text' but value is not" do
@@ -759,7 +759,7 @@ describe provider_class do
         Puppet::Type::Hocon_setting.new(common_params.merge(
                                           setting: 'foo', type: 'text', value: 12
                                         ))
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it 'throws when type is a non-valid string' do
@@ -767,7 +767,7 @@ describe provider_class do
         Puppet::Type::Hocon_setting.new(common_params.merge(
                                           setting: 'foo', type: 'invalid', value: 'abcdefg'
                                         ))
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it 'is able to handle value false with boolean type specified' do
@@ -807,7 +807,7 @@ describe provider_class do
       provider = described_class.new(resource)
       provider.create
       expect(provider.exists?).to be true
-      expect(provider.value[0].eql?(13.37)).to be(true)
+      expect(provider.value[0].eql?(13.37)).to be(true)  # rubocop:disable Lint/FloatComparison
     end
 
     it 'is able to handle an Integer string value with number type specified' do
@@ -827,7 +827,7 @@ describe provider_class do
       provider = described_class.new(resource)
       provider.create
       expect(provider.exists?).to be true
-      expect(provider.value[0].eql?(13.37)).to be(true)
+      expect(provider.value[0].eql?(13.37)).to be(true)  # rubocop:disable Lint/FloatComparison
     end
 
     it 'is able to handle string value with string type specified' do
