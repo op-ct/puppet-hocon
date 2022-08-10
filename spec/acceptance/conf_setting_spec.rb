@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 tmpdir = setup_test_directory
@@ -19,7 +21,8 @@ describe 'hocon_setting resource' do
     describe file(path) do
       it { is_expected.to be_file }
       # XXX Solaris 10 doesn't support multi-line grep
-      it("should contain #{content}") {
+
+      it("contains #{content}") {
         is_expected.to contain(content)
       }
     end
@@ -62,6 +65,7 @@ describe 'hocon_setting resource' do
 
       describe file("#{tmpdir}/hocon_setting.conf") do
         it { is_expected.to be_file }
+
         it("contains one {\n two=three\n}\nfour=five") {
           is_expected.to contain("one {\n    two=three\n}\nfour=five")
         }
@@ -105,6 +109,7 @@ describe 'hocon_setting resource' do
           run_shell("echo -e \"one {\n    two=three\n}\nfour=five\" > #{tmpdir}/hocon_setting.conf")
         end
       end
+
       after :all do
         run_shell("rm #{tmpdir}/hocon_setting.conf", acceptable_exit_codes: [0, 1, 2])
       end
@@ -132,9 +137,9 @@ describe 'hocon_setting resource' do
 
   describe 'setting, value parameters' do
     {
-      "setting => 'test.foo', value => 'bar',"   => "test {\n    foo = bar\n}",
-      "setting => 'more.baz', value => 'quux',"  => "more {\n    baz = quux\n}",
-      "setting => 'top', value => 'level',"      => 'top: "level"',
+      "setting => 'test.foo', value => 'bar'," => "test {\n    foo = bar\n}",
+      "setting => 'more.baz', value => 'quux'," => "more {\n    baz = quux\n}",
+      "setting => 'top', value => 'level'," => 'top: "level"',
     }.each do |parameter_list, content|
       context parameter_list do
         pp = <<-EOS
@@ -150,8 +155,8 @@ describe 'hocon_setting resource' do
     end
 
     {
-      ''                                     => %r{value is a required},
-      "setting => 'test.foo',"               => %r{value is a required},
+      '' => %r{value is a required},
+      "setting => 'test.foo'," => %r{value is a required},
     }.each do |parameter_list, error|
       context parameter_list do
         pp = <<-EOS

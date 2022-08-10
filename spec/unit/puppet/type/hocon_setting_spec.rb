@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'puppet'
 require 'puppet/type/hocon_setting'
 describe Puppet::Type.type(:hocon_setting) do
@@ -7,7 +9,7 @@ describe Puppet::Type.type(:hocon_setting) do
       path: '/tmp/hocon.setting',
       setting: 'test_key.master',
       value: 'value',
-      type: 'text',
+      type: 'text'
     )
   end
 
@@ -24,7 +26,7 @@ describe Puppet::Type.type(:hocon_setting) do
   end
 
   it 'accepts a valid type value' do
-    valid_types = ['boolean', 'string', 'text', 'number', 'array', 'array_element', 'hash']
+    valid_types = %w[boolean string text number array array_element hash]
 
     valid_types.each do |t|
       resource[:type] = t
@@ -53,7 +55,7 @@ describe Puppet::Type.type(:hocon_setting) do
   end
 
   it 'accepts valid string and text values' do
-    ['string', 'text'].each do |t|
+    %w[string text].each do |t|
       resource[:type] = t
       resource[:value] = 'string value'
       expect(resource[:value]).to eq(['string value'])
@@ -61,7 +63,7 @@ describe Puppet::Type.type(:hocon_setting) do
   end
 
   it 'raises an error with invalid string and text values' do
-    ['string', 'text'].each do |t|
+    %w[string text].each do |t|
       resource[:type] = t
       expect { resource[:value] = 4 }.to raise_error \
         Puppet::Error, %r{Type specified as #{t} but was (Fixnum|Integer)}
@@ -88,7 +90,7 @@ describe Puppet::Type.type(:hocon_setting) do
   end
 
   it 'raises an error with invalid number values' do
-    ['string', '45g'].each do |t|
+    %w[string 45g].each do |t|
       resource[:type] = 'number'
       expect { resource[:value] = t }.to raise_error \
         Puppet::Error, %r{Type specified as 'number' but was String}
@@ -96,7 +98,7 @@ describe Puppet::Type.type(:hocon_setting) do
   end
 
   it 'accepts valid array values' do
-    array = ['foo', 'bar']
+    array = %w[foo bar]
     resource[:type]  = 'array'
     resource[:value] = array
     expect(resource[:value]).to eq(array)

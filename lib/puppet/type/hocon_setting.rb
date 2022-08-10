@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.newtype(:hocon_setting) do
   ensurable do
     defaultvalues
@@ -35,9 +37,7 @@ Puppet::Type.newtype(:hocon_setting) do
     DESC
 
     validate do |value|
-      unless (Puppet.features.posix? && value =~ %r{^\/}) || (Puppet.features.microsoft_windows? && (value =~ %r{^.:\/} || value =~ %r{^\/\/[^\/]+\/[^\/]+}))
-        raise(Puppet::Error, "File paths must be fully qualified, not '#{value}'")
-      end
+      raise(Puppet::Error, "File paths must be fully qualified, not '#{value}'") unless (Puppet.features.posix? && value =~ %r{^/}) || (Puppet.features.microsoft_windows? && (value =~ %r{^.:/} || value =~ %r{^//[^/]+/[^/]+}))
     end
   end
 
@@ -158,43 +158,33 @@ Puppet::Type.newtype(:hocon_setting) do
 
     validate do |_val|
       # Grab the value we are going to validate
-      value = (@shouldorig.is_a?(Array) && (@shouldorig.size > 1 || @resource[:type] == 'array')) ? @shouldorig : @shouldorig[0]
+      value = @shouldorig.is_a?(Array) && (@shouldorig.size > 1 || @resource[:type] == 'array') ? @shouldorig : @shouldorig[0]
       case @resource[:type]
       when 'boolean'
-        if value != true && value != false
-          raise "Type specified as 'boolean' but was #{value.class}"
-        end
+        raise "Type specified as 'boolean' but was #{value.class}" if value != true && value != false
       when 'string', 'text'
-        unless value.is_a?(String)
-          raise "Type specified as #{@resource[:type]} but was #{value.class}"
-        end
+        raise "Type specified as #{@resource[:type]} but was #{value.class}" unless value.is_a?(String)
       when 'number'
         # Puppet stringifies numerics in versions of Puppet < 4.0.0
         # Account for this by first attempting to cast to an Integer.
         # Failing that, attempt to cast to a Float or return false
         numeric_as_string = begin
-                              Integer(value)
-                            rescue
-                              false
-                            end
+          Integer(value)
+        rescue StandardError
+          false
+        end
         numeric_as_string = begin
-                              numeric_as_string ? numeric_as_string : Float(value)
-                            rescue
-                              false
-                            end
+          numeric_as_string || Float(value)
+        rescue StandardError
+          false
+        end
 
-        unless value.is_a?(Numeric) || numeric_as_string
-          raise "Type specified as 'number' but was #{value.class}"
-        end
+        raise "Type specified as 'number' but was #{value.class}" unless value.is_a?(Numeric) || numeric_as_string
       when 'array'
-        unless value.is_a?(Array)
-          raise "Type specified as 'array' but was #{value.class}"
-        end
+        raise "Type specified as 'array' but was #{value.class}" unless value.is_a?(Array)
       when 'hash'
-        unless value.is_a?(Hash)
-          raise "Type specified as 'hash' but was #{value.class}"
-        end
-      when 'array_element', nil # rubocop:disable Lint/EmptyWhen
+        raise "Type specified as 'hash' but was #{value.class}" unless value.is_a?(Hash)
+      when 'array_element', nil
       # Do nothing, we'll figure it out on our own
       else
         raise "Type was specified as #{@resource[:type]}, but should have been one of 'boolean', 'string', 'text', 'number', 'array', or 'hash'"
@@ -204,25 +194,24 @@ Puppet::Type.newtype(:hocon_setting) do
     munge do |value|
       if value.is_a?(String) && @resource[:type] == 'number'
         munged_value = begin
-                         Integer(value)
-                       rescue
-                         false
-                       end
-        value = munged_value ? munged_value : Float(value)
+          Integer(value)
+        rescue StandardError
+          false
+        end
+        value = munged_value || Float(value)
       end
       value
     end
 
     def insync?(is)
-      if @resource[:type] == 'array_element'
+      case @resource[:type]
+      when 'array_element'
         # make sure all passed values are in the file
         Array(@resource[:value]).each do |v|
-          unless provider.value.flatten.include?(v)
-            return false
-          end
+          return false unless provider.value.flatten.include?(v)
         end
         true
-      elsif @resource[:type] == 'array'
+      when 'array'
         # Works around a bug in Puppet
         # See: https://tickets.puppetlabs.com/browse/HC-99
         is == @should
@@ -255,17 +244,9 @@ Puppet::Type.newtype(:hocon_setting) do
 
   validate do
     message = ''
-    if original_parameters[:path].nil?
-      message += 'path is a required parameter. '
-    end
-    if original_parameters[:setting].nil?
-      message += 'setting is a required parameter. '
-    end
-    if original_parameters[:value].nil? && self[:ensure] != :absent
-      message += 'value is a required parameter unless ensuring a setting is absent.'
-    end
-    if message != ''
-      raise(Puppet::Error, message)
-    end
+    message += 'path is a required parameter. ' if original_parameters[:path].nil?
+    message += 'setting is a required parameter. ' if original_parameters[:setting].nil?
+    message += 'value is a required parameter unless ensuring a setting is absent.' if original_parameters[:value].nil? && self[:ensure] != :absent
+    raise(Puppet::Error, message) if message != ''
   end
 end
