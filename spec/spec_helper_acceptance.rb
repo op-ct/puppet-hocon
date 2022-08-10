@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'beaker-rspec/spec_helper'
 require 'beaker-rspec/helpers/serverspec'
 require 'beaker/puppet_install_helper'
@@ -29,13 +31,10 @@ RSpec.configure do |c|
   c.before :suite do
     # Install module and dependencies
     hosts.each do |host|
-      if host['platform'] !~ %r{windows}i
-        copy_root_module_to(host, source: proj_root, module_name: 'hocon')
-      end
-    end
-    hosts.each do |host|
       if host['platform'] =~ %r{windows}i
         on host, puppet('plugin download')
+      else
+        copy_root_module_to(host, source: proj_root, module_name: 'hocon')
       end
     end
   end

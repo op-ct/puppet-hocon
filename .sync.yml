@@ -1,5 +1,0 @@
----
-Gemfile:
-  optional:
-    ':system_tests':
-      - gem: 'puppet_litmus'
