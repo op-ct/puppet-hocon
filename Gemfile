@@ -17,6 +17,7 @@ end
 
 group :system_tests do
   gem 'voxpupuli-acceptance', '~> 1.0',  :require => false
+  gem 'puppet_litmus',                   :require => false
 end
 
 group :release do
