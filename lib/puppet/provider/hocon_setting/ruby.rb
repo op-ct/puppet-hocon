@@ -22,7 +22,10 @@ Puppet::Type.type(:hocon_setting).provide(:ruby) do
       return false
     end
 
-    return Array(@resource[:value]).any? { |v| value.flatten.include?(v) } if type == 'array_element'
+    if type == 'array_element'
+      value_flattened = value.flatten
+      return Array(@resource[:value]).any? { |v| value_flattened.include?(v) }
+    end
 
     true
   end
