@@ -26,11 +26,7 @@ describe 'hocon_setting resource' do
 
     describe file(path) do
       it { is_expected.to be_file }
-      # XXX Solaris 10 doesn't support multi-line grep
-
-      it("contains #{content}", unless: fact('osfamily') == 'Solaris') {
-        is_expected.to contain(content)
-      }
+      it { is_expected.to contain(content) }
     end
   end
 
@@ -77,11 +73,7 @@ describe 'hocon_setting resource' do
 
       describe file("#{tmpdir}/hocon_setting.conf") do
         it { is_expected.to be_file }
-        # XXX Solaris 10 doesn't support multi-line grep
-
-        it("contains one {\n two=three\n}\nfour=five", unless: fact('osfamily') == 'Solaris') {
-          is_expected.to contain("one {\n    two=three\n}\nfour=five")
-        }
+        it { is_expected.to contain("one {\n    two=three\n}\nfour=five") }
       end
     end
 
