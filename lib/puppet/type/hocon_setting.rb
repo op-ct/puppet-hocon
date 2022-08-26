@@ -37,7 +37,11 @@ Puppet::Type.newtype(:hocon_setting) do
     DESC
 
     validate do |value|
-      raise(Puppet::Error, "File paths must be fully qualified, not '#{value}'") unless (Puppet.features.posix? && value =~ %r{^/}) || (Puppet.features.microsoft_windows? && (value =~ %r{^.:/} || value =~ %r{^//[^/]+/[^/]+}))
+      # rubocop:disable Style/IfUnlessModifier
+      unless (Puppet.features.posix? && value =~ %r{^/}) || (Puppet.features.microsoft_windows? && (value =~ %r{^.:/} || value =~ %r{^//[^/]+/[^/]+}))
+        raise(Puppet::Error, "File paths must be fully qualified, not '#{value}'")
+      end
+      # rubocop:enable Style/IfUnlessModifier
     end
   end
 
