@@ -79,11 +79,7 @@ describe 'hocon_setting resource' do
 
     context '=> absent for key/value' do
       before :all do
-        if fact('osfamily') == 'Darwin'
-          shell("echo \"one {\n    two=three\n}\nfour=five\" > #{tmpdir}/hocon_setting.conf")
-        else
-          shell("echo -e \"one {\n    two=three\n}\nfour=five\" > #{tmpdir}/hocon_setting.conf")
-        end
+        shell("echo -e \"one {\n    two=three\n}\nfour=five\" > #{tmpdir}/hocon_setting.conf")
       end
 
       pp = <<-EOS
@@ -109,11 +105,7 @@ describe 'hocon_setting resource' do
 
     context '=> absent for top-level settings' do
       before :all do
-        if fact('osfamily') == 'Darwin'
-          shell("echo \"one {\n    two=three\n}\nfour=five\" > #{tmpdir}/hocon_setting.conf")
-        else
-          shell("echo -e \"one {\n    two=three\n}\nfour=five\" > #{tmpdir}/hocon_setting.conf")
-        end
+        shell("echo -e \"one {\n    two=three\n}\nfour=five\" > #{tmpdir}/hocon_setting.conf")
       end
 
       after :all do
