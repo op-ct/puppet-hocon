@@ -8,9 +8,7 @@ require 'beaker-rspec/spec_helper'
 require 'beaker-rspec/helpers/serverspec'
 require 'beaker/puppet_install_helper'
 
-unless ENV['RS_PROVISION'] == 'no'
-  run_puppet_install_helper
-end
+run_puppet_install_helper unless ENV['RS_PROVISION'] == 'no'
 
 RSpec.configure do |c|
   # Project root
